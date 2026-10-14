@@ -1,0 +1,4 @@
+
+cached feat_effb0_flair_native.npy
+cached feat_effb0_t1_native.npy
+[effb0__mix_native__thesis__thesis__s0] thesis_test: 20080 train slices, stopped at epoch 11, 0.8 min

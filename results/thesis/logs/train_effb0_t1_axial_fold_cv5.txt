@@ -1,0 +1,6 @@
+cached feat_effb0_t1_axial.npy
+[effb0__t1_axial__fold__cv5__s0] fold0: 9740 train slices, stopped at epoch 12, 0.5 min
+[effb0__t1_axial__fold__cv5__s0] fold1: 9740 train slices, stopped at epoch 10, 0.2 min
+[effb0__t1_axial__fold__cv5__s0] fold2: 9740 train slices, stopped at epoch 8, 0.2 min
+[effb0__t1_axial__fold__cv5__s0] fold3: 9760 train slices, stopped at epoch 9, 0.2 min
+[effb0__t1_axial__fold__cv5__s0] fold4: 9760 train slices, stopped at epoch 9, 0.2 min

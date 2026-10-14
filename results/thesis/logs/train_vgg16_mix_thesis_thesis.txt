@@ -1,0 +1,3 @@
+cached feat_vgg16_flair_native.npy
+cached feat_vgg16_t1_native.npy
+[vgg16__mix_native__thesis__thesis__s0] thesis_test: 20080 train slices, stopped at epoch 11, 1.5 min

@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+data/*
+!data/soop_manifest.csv
+!data/labelled_participants.txt
+results/thesis/smoke/
+results/thesis/logs/smoke.txt
+results/thesis/logs/slices.txt
+*.pt

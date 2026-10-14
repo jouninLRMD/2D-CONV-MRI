@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite it as below."
+title: "Do two-dimensional convolutional networks on structural MRI add to clinical variables for predicting discharge outcome after ischemic stroke? A patient-level re-evaluation on a public dataset"
+authors:
+  - family-names: Donado Pinto
+    given-names: Laura Sofía
+    affiliation: Universidad Internacional de La Rioja
+  - family-names: Mercado-Diaz
+    given-names: Luis R.
+    affiliation: University of Connecticut
+  - family-names: Posada-Quintero
+    given-names: Hugo F.
+    affiliation: University of Connecticut
+  - family-names: Barrera-Causil
+    given-names: Carlos
+    affiliation: Instituto Tecnológico Metropolitano
+repository-code: "https://github.com/jouninLRMD/2D-CONV-MRI"
+license: GPL-3.0
+type: software

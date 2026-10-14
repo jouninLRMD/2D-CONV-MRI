@@ -1,0 +1,7 @@
+tag,n,energy,area,hit
+basic__dwi_axial__fold__cv5__s0,4353,0.0199,0.1025,0.0078
+basic__dwi_axial__none__cv5__s0,4431,0.1542,0.1013,0.2383
+effb0__dwi_axial__fold__cv5__s0,4415,0.1492,0.1013,0.2174
+effb0__dwi_axial__none__cv5__s0,4421,0.1527,0.1013,0.2384
+vgg16__dwi_axial__fold__cv5__s0,4427,0.1303,0.1013,0.1947
+vgg16__dwi_axial__none__cv5__s0,4429,0.1382,0.1013,0.2093
