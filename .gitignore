@@ -8,3 +8,4 @@ results/thesis/smoke/
 results/thesis/logs/smoke.txt
 results/thesis/logs/slices.txt
 *.pt
+results/thesis/check_without_networks/

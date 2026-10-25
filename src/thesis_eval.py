@@ -25,9 +25,17 @@ import matplotlib.pyplot as plt
 logging.getLogger("matplotlib.font_manager").setLevel(logging.ERROR)
 plt.rcParams.update({"font.family": ["Arial", "Liberation Sans", "DejaVu Sans"], "font.size": 7, "axes.linewidth": 0.6,
                      "axes.spines.top": False, "axes.spines.right": False, "legend.frameon": False, "pdf.fonttype": 42})
-T = RES / "thesis"; OUT = T / "paper"; OUT.mkdir(parents=True, exist_ok=True)
-ids = pd.read_csv(WORK / "thesis" / "ids.csv").participant_id.values
-coh = pd.read_csv(RES / "cohort_all.csv").set_index("participant_id"); L = coh.loc[ids]
+T = RES / "thesis"; OUT = T / "paper"
+if not list((T / "oof").glob("*.csv")):
+    # no network predictions yet: keep the manuscript outputs untouched and write the clinical-only analyses elsewhere
+    OUT = T / "check_without_networks"
+    print(f"No predictions in {T / 'oof'}; writing the clinical model and split-variability results to {OUT}")
+OUT.mkdir(parents=True, exist_ok=True)
+coh = pd.read_csv(RES / "cohort_all.csv").set_index("participant_id")
+# patient order of the slice arrays; without them (no images) the labelled cohort in the same order
+ids = (pd.read_csv(WORK / "thesis" / "ids.csv").participant_id.values if (WORK / "thesis" / "ids.csv").exists()
+       else coh.index[coh.labelled].values)
+L = coh.loc[ids]
 ARCH = {"basic": "Basic CNN", "vgg16": "VGG16", "effb0": "EfficientNet-B0"}
 INP = {"mix_native": "FLAIR + T1w, acquisition axis", "flair_native": "FLAIR, acquisition axis", "t1_native": "T1w, acquisition axis",
        "flair_axial": "FLAIR, axial", "t1_axial": "T1w, axial", "dwi_axial": "DWI, axial"}
@@ -110,7 +118,7 @@ def split_variability(n_rep=200):
 
 
 SV = split_variability(); pd.DataFrame(dict(auc=SV)).to_csv(OUT / "split_variability.csv", index=False)
-print(R[["tag", "auc_slice", "auc_patient", "lo", "hi", "d_clin"]].round(3).to_string())
+print(R.reindex(columns=["tag", "auc_slice", "auc_patient", "lo", "hi", "d_clin"]).round(3).to_string())
 
 # ------------------------------------------------------------------------------------------- figures
 pl = pd.read_csv(WORK / "thesis" / "planes.csv") if (WORK / "thesis" / "planes.csv").exists() else None

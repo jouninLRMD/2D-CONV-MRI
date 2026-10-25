@@ -11,6 +11,7 @@ Stages, in order:
   features    lesion load per arterial territory (atlas resampled to the image grid)
   cache       memory-mapped DWI volumes and lesion masks in MNI space
   design      Figure 1 (study design)
+  table       Table 1 (cohort characteristics by outcome)
   slices      2D slice datasets: FLAIR and T1w as in the thesis and reoriented, DWI with lesion masks
   smoke       two-epoch test of the networks on a few batches (results/thesis/smoke); nothing else is touched
   train       the 27 network runs of the paper (GPU, about 3 hours)
@@ -30,8 +31,8 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent
 SRC, SCRIPTS = REPO / "src", REPO / "scripts"
 RES = Path(os.environ.get("CALM_RESULTS", str(REPO / "results")))
-STAGES = ["download", "atlas", "preprocess", "cohort", "features", "cache", "design", "slices", "smoke", "train",
-          "evaluate"]
+STAGES = ["download", "atlas", "preprocess", "cohort", "features", "cache", "design", "table", "slices", "smoke",
+          "train", "evaluate"]
 ARCHS = ["basic", "vgg16", "effb0"]
 SHORT = {"mix_native": "mix", "dwi_axial": "dwi"}           # log file names
 
@@ -97,6 +98,8 @@ def main():
             run([py, SRC / "build_cache.py"], dry=a.dry_run)
         elif st == "design":
             run([py, SRC / "design_figure.py"], dry=a.dry_run)
+        elif st == "table":
+            run([py, SRC / "cohort_table.py"], dry=a.dry_run)
         elif st == "slices":
             run([py, SRC / "thesis_slices.py"], log=L / "slices.txt", dry=a.dry_run)
         elif st == "smoke":

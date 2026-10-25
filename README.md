@@ -23,6 +23,7 @@ src/cohort_splits.py         cohort table (718 patients) and the frozen five fol
 src/atlas_features.py        arterial atlas on the image grid and lesion load per territory
 src/build_cache.py           memory-mapped DWI volumes and lesion masks in MNI space
 src/design_figure.py         Figure 1 (study design)
+src/cohort_table.py          Table 1 (cohort characteristics by discharge outcome)
 src/thesis_slices.py         2D slices: FLAIR and T1w as in the thesis and reoriented, DWI with lesion masks
 src/thesis_models.py         the three networks of the thesis, trained under each combination of factors; Grad-CAM
 src/thesis_eval.py           AUCs, confidence intervals, clinical model, split variability, Grad-CAM summary,
@@ -67,7 +68,7 @@ python reproduce.py --dry-run  # list the commands without running them
 | `atlas` | arterial territory atlas | seconds |
 | `preprocess` | DWI preprocessing and registration of 1,715 sessions | 1 to 2 h with 6 CPU workers |
 | `cohort`, `features`, `cache` | cohort and folds, atlas on the image grid, MNI image cache | 20 min |
-| `design` | Figure 1 | seconds |
+| `design`, `table` | Figure 1 and Table 1 | seconds |
 | `slices` | 2D slices of the five inputs for the 718 patients (about 4.3 GB) | 30 to 45 min |
 | `smoke` | two-epoch test of the basic network on DWI, written to `results/thesis/smoke` | 2 min |
 | `train` | the 27 network runs (3 networks x 9 configurations) | about 3 h |
@@ -84,13 +85,22 @@ If you rerun `slices`, the cached backbone features are rebuilt automatically, b
 
 ### Without images or a GPU
 
-The clinical logistic model, the thesis split, the folds and the split-variability analysis need only `results/cohort_all.csv`. Once the predictions of the networks are in `results/thesis/oof`, every table, figure and number of the paper is recomputed with:
+Table 1, the clinical logistic model, the thesis split, the folds and the split-variability analysis need only `results/cohort_all.csv`, which is included, so they can be checked on any computer:
+
+```bash
+python reproduce.py --only design table
+python src/thesis_eval.py      # clinical model (AUC 0.824 on the thesis split, 0.756 in CV) and split variability
+```
+
+Without network predictions, `thesis_eval.py` writes to `results/thesis/check_without_networks` and leaves the manuscript outputs in `results/thesis/paper` untouched.
+
+The slice-level predictions of the 27 network runs (`results/thesis/oof`) will be added to the repository after a final rerun of the `train` stage. Once they are there, every table, figure and number of the paper is recomputed with:
 
 ```bash
 python reproduce.py --only evaluate
 ```
 
-`results/thesis/paper` holds the outputs of the run reported in the paper: `all_runs.csv` (every configuration, slice-level and patient-level AUC with 95% CI, accuracy, difference from the clinical model), `per_unit.csv` (every fold), `split_variability.csv`, `gradcam_summary.csv`, the figures and `numbers_t.tex`.
+`results/thesis/paper` holds the outputs of the run reported in the paper: `tab_cohort.tex` (Table 1), `all_runs.csv` (every configuration, slice-level and patient-level AUC with 95% CI, accuracy, difference from the clinical model), `per_unit.csv` (every fold), `split_variability.csv`, `gradcam_summary.csv`, the figures and `numbers_t.tex`.
 
 ## The configurations
 

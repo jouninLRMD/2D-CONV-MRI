@@ -34,9 +34,10 @@ Written under the work folder (`CALM_WORK`, by default `data/work`):
 
 | File | Content |
 |---|---|
+| `tab_cohort.tex` | Body of Table 1: cohort characteristics by discharge outcome, with Mann-Whitney U or chi-squared p values (`src/cohort_table.py`). |
 | `all_runs.csv` | One row per configuration and for the clinical model: slice-level and patient-level AUC, bootstrap 95% CI (`lo`, `hi`), slice and patient accuracy, difference from the clinical model with its CI (`d_clin`, `d_lo`, `d_hi`). |
 | `per_unit.csv` | AUC of every configuration in every fold (or on the thesis test set). |
-| `patient_predictions.csv` | Patient-level probability of every configuration and of the clinical model, with outcome, mRS, fold and the thesis partition of each patient. |
+| `patient_predictions.csv` | Patient-level probability of every configuration and of the clinical model, with outcome, mRS, fold and the thesis partition of each patient (written by `src/thesis_eval.py` when the predictions in `results/thesis/oof` are present). |
 | `split_variability.csv` | Test AUC of the clinical model on 200 random 85/15 splits. |
 | `gradcam_summary.csv` | Mean energy in the lesion, expected share by area and pointing hit rate per DWI network. |
 | `numbers_t.tex` | Every number quoted in the manuscript, as LaTeX macros. |
