@@ -1,6 +1,6 @@
 cached feat_vgg16_flair_axial.npy
-[vgg16__flair_axial__fold__cv5__s0] fold0: 9740 train slices, stopped at epoch 10, 0.7 min
-[vgg16__flair_axial__fold__cv5__s0] fold1: 9740 train slices, stopped at epoch 17, 0.5 min
-[vgg16__flair_axial__fold__cv5__s0] fold2: 9740 train slices, stopped at epoch 9, 0.3 min
-[vgg16__flair_axial__fold__cv5__s0] fold3: 9760 train slices, stopped at epoch 22, 0.5 min
+[vgg16__flair_axial__fold__cv5__s0] fold0: 9740 train slices, stopped at epoch 10, 0.6 min
+[vgg16__flair_axial__fold__cv5__s0] fold1: 9740 train slices, stopped at epoch 17, 0.4 min
+[vgg16__flair_axial__fold__cv5__s0] fold2: 9740 train slices, stopped at epoch 9, 0.2 min
+[vgg16__flair_axial__fold__cv5__s0] fold3: 9760 train slices, stopped at epoch 22, 0.4 min
 [vgg16__flair_axial__fold__cv5__s0] fold4: 9760 train slices, stopped at epoch 9, 0.2 min

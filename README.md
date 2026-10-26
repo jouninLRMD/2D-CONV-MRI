@@ -85,22 +85,19 @@ If you rerun `slices`, the cached backbone features are rebuilt automatically, b
 
 ### Without images or a GPU
 
-Table 1, the clinical logistic model, the thesis split, the folds and the split-variability analysis need only `results/cohort_all.csv`, which is included, so they can be checked on any computer:
+The repository includes the predictions of every network in the paper, so all results can be recomputed on any computer, without images or a GPU:
+
+* `results/thesis/oof`: the predicted probability of poor outcome for every held-out slice of the 27 network runs.
+* `results/thesis/gradcam_*.csv` and `gradcam_examples_*.npz`: the Grad-CAM scores of every held-out DWI slice with lesion, and the examples shown in Figure 6.
+* `results/thesis/planes.csv` and `slice_ids.csv`: the anatomical plane of every stored FLAIR and T1w volume, and the patient order of the slice arrays.
 
 ```bash
-python reproduce.py --only design table
-python src/thesis_eval.py      # clinical model (AUC 0.824 on the thesis split, 0.756 in CV) and split variability
+python reproduce.py --only design table evaluate
 ```
 
-Without network predictions, `thesis_eval.py` writes to `results/thesis/check_without_networks` and leaves the manuscript outputs in `results/thesis/paper` untouched.
+This rewrites Table 1, every figure except Figure 2 (which shows image slices), `all_runs.csv`, `per_unit.csv`, `split_variability.csv`, `gradcam_summary.csv`, `patient_predictions.csv` and `numbers_t.tex`, the file with every number quoted in the manuscript. The predictions come from a complete rerun of the pipeline from the slices onward (26 October 2026), which reproduced every table and number of the paper exactly. If `results/thesis/oof` is empty, `thesis_eval.py` computes only the clinical model and the split variability and writes them to `results/thesis/check_without_networks`, leaving the manuscript outputs untouched.
 
-The slice-level predictions of the 27 network runs (`results/thesis/oof`) will be added to the repository after a final rerun of the `train` stage. Once they are there, every table, figure and number of the paper is recomputed with:
-
-```bash
-python reproduce.py --only evaluate
-```
-
-`results/thesis/paper` holds the outputs of the run reported in the paper: `tab_cohort.tex` (Table 1), `all_runs.csv` (every configuration, slice-level and patient-level AUC with 95% CI, accuracy, difference from the clinical model), `per_unit.csv` (every fold), `split_variability.csv`, `gradcam_summary.csv`, the figures and `numbers_t.tex`.
+`results/thesis/paper` holds the outputs of the run reported in the paper: `tab_cohort.tex` (Table 1), `patient_predictions.csv` (patient-level probability of every network and of the clinical model, with outcome, fold and thesis partition), `all_runs.csv` (every configuration, slice-level and patient-level AUC with 95% CI, accuracy, difference from the clinical model), `per_unit.csv` (every fold), `split_variability.csv`, `gradcam_summary.csv`, the figures and `numbers_t.tex`.
 
 ## The configurations
 

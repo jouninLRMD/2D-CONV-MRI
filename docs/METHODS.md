@@ -82,5 +82,5 @@ The re-implementation keeps the architectures, the inputs of the thesis setting,
 ## Reproducibility notes
 
 * Everything that does not involve training (cohort, folds, thesis split, clinical model, split variability) is deterministic and reproduces the paper exactly.
-* GPU training is not bit-for-bit deterministic (cuDNN kernels and mixed precision), so a new training run can give AUCs that differ slightly from the paper. The tables in `results/thesis/paper` are the ones behind the paper's numbers.
+* Training was rerun from the slices onward on the same computer (one NVIDIA RTX 4000 Ada, PyTorch 2.11) on 26 October 2026, and the new predictions reproduced every table and number of the paper exactly. GPU training is not guaranteed to be bit-for-bit deterministic across GPUs, drivers or library versions, so on other hardware AUCs may differ slightly. The predictions in `results/thesis/oof` are the ones behind the paper's numbers.
 * The original thesis used a 70/15/15 split of the same 718 patients. It described the cohort as 1,436 patients and about 28,700 slices, which counts each patient once per sequence (718 patients x 2 sequences = 1,436 series of 20 slices).

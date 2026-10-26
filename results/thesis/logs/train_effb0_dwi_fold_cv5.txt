@@ -1,6 +1,6 @@
 cached feat_effb0_dwi_axial.npy
-[effb0__dwi_axial__fold__cv5__s0] fold0: 9740 train slices, stopped at epoch 15, 0.8 min
+[effb0__dwi_axial__fold__cv5__s0] fold0: 9740 train slices, stopped at epoch 15, 0.9 min
 [effb0__dwi_axial__fold__cv5__s0] fold1: 9740 train slices, stopped at epoch 24, 0.8 min
-[effb0__dwi_axial__fold__cv5__s0] fold2: 9740 train slices, stopped at epoch 16, 0.6 min
-[effb0__dwi_axial__fold__cv5__s0] fold3: 9760 train slices, stopped at epoch 13, 0.6 min
+[effb0__dwi_axial__fold__cv5__s0] fold2: 9740 train slices, stopped at epoch 16, 0.7 min
+[effb0__dwi_axial__fold__cv5__s0] fold3: 9760 train slices, stopped at epoch 13, 0.5 min
 [effb0__dwi_axial__fold__cv5__s0] fold4: 9760 train slices, stopped at epoch 9, 0.4 min

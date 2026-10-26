@@ -26,6 +26,8 @@ Written under the work folder (`CALM_WORK`, by default `data/work`):
 | File | Columns | Content |
 |---|---|---|
 | `oof/<arch>__<input>__<clin>__<split>__s0.csv` | `participant_id, unit, src, slice, p` | Predicted probability of poor outcome for every held-out slice. `unit` is `thesis_test` or `fold0` to `fold4`; `src` is the input the slice came from (`flair_native` or `t1_native` for the thesis input). |
+| `planes.csv` | `participant_id, flair_plane, flair_shape, t1_plane, t1_shape` | Anatomical plane of the third array axis and array shape of every stored FLAIR and T1w volume (copy of `<work>/thesis/planes.csv`). |
+| `slice_ids.csv` | `participant_id` | Patient order of the slice arrays (copy of `<work>/thesis/ids.csv`; the same order as the labelled patients in `results/cohort_all.csv`). |
 | `gradcam_<tag>.csv` | `participant_id, slice, lesion_px, energy_in_lesion, lesion_area_frac, pointing_hit` | One row per held-out DWI slice with at least 20 lesion pixels. |
 | `gradcam_examples_<arch>__<clin>.npz` | `img, mask, cam` | The first 12 slices of the Grad-CAM analysis, for Figure 6. |
 | `logs/train_*.txt`, `logs/evaluate.txt` | | Console output of every run: training slices, stopping epoch and time per fold. |
@@ -37,7 +39,7 @@ Written under the work folder (`CALM_WORK`, by default `data/work`):
 | `tab_cohort.tex` | Body of Table 1: cohort characteristics by discharge outcome, with Mann-Whitney U or chi-squared p values (`src/cohort_table.py`). |
 | `all_runs.csv` | One row per configuration and for the clinical model: slice-level and patient-level AUC, bootstrap 95% CI (`lo`, `hi`), slice and patient accuracy, difference from the clinical model with its CI (`d_clin`, `d_lo`, `d_hi`). |
 | `per_unit.csv` | AUC of every configuration in every fold (or on the thesis test set). |
-| `patient_predictions.csv` | Patient-level probability of every configuration and of the clinical model, with outcome, mRS, fold and the thesis partition of each patient (written by `src/thesis_eval.py` when the predictions in `results/thesis/oof` are present). |
+| `patient_predictions.csv` | Patient-level probability of every configuration and of the clinical model, with outcome, mRS, fold and the thesis partition of each patient. |
 | `split_variability.csv` | Test AUC of the clinical model on 200 random 85/15 splits. |
 | `gradcam_summary.csv` | Mean energy in the lesion, expected share by area and pointing hit rate per DWI network. |
 | `numbers_t.tex` | Every number quoted in the manuscript, as LaTeX macros. |

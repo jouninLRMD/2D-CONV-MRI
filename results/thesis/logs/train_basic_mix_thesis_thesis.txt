@@ -1,1 +1,1 @@
-[basic__mix_native__thesis__thesis__s0] thesis_test: 20080 train slices, stopped at epoch 11, 2.6 min
+[basic__mix_native__thesis__thesis__s0] thesis_test: 20080 train slices, stopped at epoch 11, 2.5 min

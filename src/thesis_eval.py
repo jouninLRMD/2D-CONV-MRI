@@ -121,7 +121,8 @@ SV = split_variability(); pd.DataFrame(dict(auc=SV)).to_csv(OUT / "split_variabi
 print(R.reindex(columns=["tag", "auc_slice", "auc_patient", "lo", "hi", "d_clin"]).round(3).to_string())
 
 # ------------------------------------------------------------------------------------------- figures
-pl = pd.read_csv(WORK / "thesis" / "planes.csv") if (WORK / "thesis" / "planes.csv").exists() else None
+_pl = [f for f in (WORK / "thesis" / "planes.csv", T / "planes.csv") if f.exists()]   # from thesis_slices.py, or the copy kept in results
+pl = pd.read_csv(_pl[0]) if _pl else None
 cols = {"basic": "#7570b3", "vgg16": "#1b9e77", "effb0": "#d95f02"}
 # Fig T1: what the networks see. Native-axis slices (thesis) against axial slices after reorientation, for one patient
 # whose FLAIR was stored axially and one whose FLAIR was stored sagittally, plus DWI; and acquisition planes per sequence
