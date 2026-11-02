@@ -47,12 +47,20 @@ def backbone(arch):
     return m.features, 1280
 
 
-def to_rgb(x):                                       # (B,1,H,W) in [0,1] -> ImageNet-normalized 3 channels
-    return (x.repeat(1, 3, 1, 1) - MEAN.to(x.device)) / STD.to(x.device)
+def to_rgb(x, arch="vgg16", prep="imagenet"):      # (B,1,H,W) in [0,1] -> 3 channels for the frozen backbone
+    x = x.repeat(1, 3, 1, 1)
+    if prep == "imagenet":                           # standard ImageNet normalization (this study)
+        return (x - MEAN.to(x.device)) / STD.to(x.device)
+    # prep == "thesis": the thesis fed the [0, 1] slices to the Keras models without preprocess_input. Keras VGG16
+    # then receives unnormalized input; Keras EfficientNet-B0 rescales by 1/255 and normalizes internally, so the
+    # slices reach it almost constant. This reproduces both behaviors with the torchvision weights.
+    if arch == "effb0":
+        return (x / 255.0 - MEAN.to(x.device)) / STD.to(x.device)
+    return x
 
 
-def cache_features(arch, inp, dev):
-    f = TH / f"feat_{arch}_{inp}.npy"
+def cache_features(arch, inp, dev, prep="imagenet"):
+    f = TH / f"feat_{arch}_{inp}{'_thesisprep' if prep == 'thesis' else ''}.npy"
     X = np.load(TH / f"{inp}.npy", mmap_mode="r"); N, S = X.shape[:2]
     if f.exists() and f.stat().st_mtime > (TH / f"{inp}.npy").stat().st_mtime:
         c = np.load(f, mmap_mode="r")
@@ -64,7 +72,7 @@ def cache_features(arch, inp, dev):
         for i in range(N):
             x = torch.from_numpy(np.asarray(X[i], dtype=np.float32) / 255.0)[:, None].to(dev)
             with torch.autocast("cuda", dtype=torch.bfloat16, enabled=dev.type == "cuda"):
-                h = bb(to_rgb(x)).float().mean((2, 3))
+                h = bb(to_rgb(x, arch, prep)).float().mean((2, 3))
             out[i] = h.cpu().numpy().astype(np.float16)
     out.flush(); print(f"cached {f.name}", flush=True)
     return np.load(f, mmap_mode="r")
@@ -140,6 +148,8 @@ def main():
     ap.add_argument("--epochs", type=int, default=50); ap.add_argument("--patience", type=int, default=8)
     ap.add_argument("--seed", type=int, default=0); ap.add_argument("--gradcam", action="store_true")
     ap.add_argument("--quick", action="store_true", help="two epochs on a few batches; outputs to results/thesis/smoke")
+    ap.add_argument("--prep", choices=["imagenet", "thesis"], default="imagenet",
+                    help="input preprocessing of the frozen backbones: ImageNet normalization, or as in the thesis code")
     a = ap.parse_args()
     if a.quick:
         a.epochs, a.patience = 2, 1
@@ -150,8 +160,8 @@ def main():
     ids = pd.read_csv(TH / "ids.csv").participant_id.values
     coh = pd.read_csv(RES / "cohort_all.csv").set_index("participant_id")
     L = coh.loc[ids].reset_index()
-    inputs = ["flair_native", "t1_native"] if a.input == "mix_native" else [a.input]
-    tag = f"{a.arch}__{a.input}__{a.clin}__{a.split}__s{a.seed}"
+    inputs = {"mix_native": ["flair_native", "t1_native"], "mix_axial": ["flair_axial", "t1_axial"]}.get(a.input, [a.input])
+    tag = f"{a.arch}__{a.input}{'-thesisprep' if a.prep == 'thesis' and a.arch != 'basic' else ''}__{a.clin}__{a.split}__s{a.seed}"
     rows, cams = [], []
     for unit, tr, va, te in splits(L, a.split):
         t0 = time.time()
@@ -174,7 +184,7 @@ def main():
                 return torch.from_numpy(x)[:, None].to(dev), torch.from_numpy(T[idx[:, 0]]).to(dev), torch.from_numpy(y[idx[:, 0]]).to(dev)
             fwd = lambda xb, tb: model(xb, tb)
         else:
-            Fs = [cache_features(a.arch, i, dev) for i in inputs]
+            Fs = [cache_features(a.arch, i, dev, a.prep) for i in inputs]
             model = Head(Fs[0].shape[-1], n_tab).to(dev)
             def batch(idx):
                 f = np.stack([Fs[j][p, s] for p, j, s in idx]).astype(np.float32)
@@ -238,20 +248,27 @@ def gradcam(a, model, L, s_te, T, dev, amp):
                 h = torch.cat([h, model.tab(t)], 1)
             logit = model.head(h)[0, 0]
         else:
-            fm = bb(to_rgb(x)); fm.retain_grad(); logit = model(fm.mean((2, 3)), t)[0]
+            # last convolutional feature map: for VGG16 the output of conv5_3 (14 x 14), before the final max pooling
+            body, tail = (bb[:-1], bb[-1]) if a.arch == "vgg16" else (bb, nn.Identity())
+            fm = body(to_rgb(x, a.arch, a.prep)); fm.retain_grad(); logit = model(tail(fm).mean((2, 3)), t)[0]
         model.zero_grad(); logit.backward()
         w = fm.grad.mean((2, 3), keepdim=True); cam = F.relu((w * fm).sum(1, keepdim=True))
         cam = F.interpolate(cam, size=m.shape, mode="bilinear", align_corners=False)[0, 0].detach().cpu().numpy()
         brain = np.asarray(X[p, s]) > 0
         cam = cam * brain
-        if cam.sum() <= 0:
-            continue
         from scipy.ndimage import binary_dilation
         md = binary_dilation(m > 0.5, iterations=5)
+        # control region: the lesion mirrored across the midline (columns are left-right), minus the lesion itself
+        mm = md[:, ::-1] & ~md & brain
+        row = dict(participant_id=L.participant_id[p], slice=int(s), lesion_px=int(m.sum()),
+                   lesion_area_frac=float(md.sum() / max(brain.sum(), 1)),
+                   mirror_area_frac=float(mm.sum() / max(brain.sum(), 1)), cam_empty=int(cam.sum() <= 0))
+        if cam.sum() <= 0:                         # map is zero everywhere: recorded, excluded from the energy measures
+            out.append(row); continue
         yx = np.unravel_index(np.argmax(cam), cam.shape)
-        out.append(dict(participant_id=L.participant_id[p], slice=int(s), lesion_px=int(m.sum()),
-                        energy_in_lesion=float(cam[md].sum() / cam.sum()), lesion_area_frac=float(md.sum() / max(brain.sum(), 1)),
-                        pointing_hit=int(md[yx])))
+        row.update(energy_in_lesion=float(cam[md].sum() / cam.sum()), energy_in_mirror=float(cam[mm].sum() / cam.sum()),
+                   pointing_hit=int(md[yx]))
+        out.append(row)
         if len(examples) < 12:
             examples.append((np.asarray(X[p, s]), m, cam))
     if examples:

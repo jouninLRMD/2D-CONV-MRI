@@ -14,7 +14,12 @@ Stages, in order:
   table       Table 1 (cohort characteristics by outcome)
   slices      2D slice datasets: FLAIR and T1w as in the thesis and reoriented, DWI with lesion masks
   smoke       two-epoch test of the networks on a few batches (results/thesis/smoke); nothing else is touched
-  train       the 27 network runs of the paper (GPU, about 3 hours)
+  train       the 27 network runs of the paper, seed 0 (GPU, about 3 hours)
+  extra       single-factor ladder steps (pooled axial FLAIR + T1w; FLAIR alone as stored) and the thesis input
+              preprocessing for the pretrained networks (GPU, about 1 hour)
+  gradcam     Grad-CAM of the six DWI networks with the mirror-image control region (GPU, about 1.5 hours)
+  seeds       seeds 1 to 4 of the 27 configurations, for training variability (GPU, about 11 hours; the pretrained
+              networks run first)
   evaluate    AUCs, confidence intervals, clinical model, split variability, Grad-CAM, figures and number macros
 
 Usage (from the repository root):
@@ -32,9 +37,14 @@ REPO = Path(__file__).resolve().parent
 SRC, SCRIPTS = REPO / "src", REPO / "scripts"
 RES = Path(os.environ.get("CALM_RESULTS", str(REPO / "results")))
 STAGES = ["download", "atlas", "preprocess", "cohort", "features", "cache", "design", "table", "slices", "smoke",
-          "train", "evaluate"]
+          "train", "extra", "gradcam", "seeds", "evaluate"]
 ARCHS = ["basic", "vgg16", "effb0"]
 SHORT = {"mix_native": "mix", "dwi_axial": "dwi"}           # log file names
+SEEDS = [1, 2, 3, 4]
+# single-factor ladder steps: reorientation alone (both sequences pooled), and FLAIR alone without reorientation
+EXTRA = [("mix_axial", "fold", "cv5"), ("flair_native", "fold", "cv5")]
+# the thesis setting with the thesis input preprocessing of the frozen backbones (pretrained networks only)
+THESIS_PREP = [("mix_native", "thesis", "thesis"), ("mix_native", "thesis", "cv5")]
 
 # (input, clinical handling, split, Grad-CAM): the 9 configurations run for each architecture, in the paper's order
 CONFIGS = [
@@ -118,6 +128,47 @@ def main():
                     if cam:
                         cmd.append("--gradcam")
                     run(cmd, log=L / f"train_{arch}_{SHORT.get(inp, inp)}_{clin}_{split}.txt", dry=a.dry_run)
+        elif st == "extra":
+            jobs = [(arch, inp, clin, split, []) for arch in ARCHS for inp, clin, split in EXTRA]
+            jobs += [(arch, inp, clin, split, ["--prep", "thesis"]) for arch in ["vgg16", "effb0"]
+                     for inp, clin, split in THESIS_PREP]
+            for arch, inp, clin, split, extra in jobs:
+                if a.arch and arch not in a.arch:
+                    continue
+                name = inp + ("-thesisprep" if extra else "")
+                tag = f"{arch}__{name}__{clin}__{split}__s0"
+                if (RES / "thesis" / "oof" / f"{tag}.csv").exists() and not a.force:
+                    print(f"  {tag}: predictions exist, skipped")
+                    continue
+                cmd = [py, SRC / "thesis_models.py", "--arch", arch, "--input", inp, "--clin", clin, "--split", split] + extra
+                run(cmd, log=L / f"train_{arch}_{SHORT.get(name, name)}_{clin}_{split}.txt", dry=a.dry_run)
+        elif st == "gradcam":
+            for arch in ARCHS:
+                if a.arch and arch not in a.arch:
+                    continue
+                for clin in ["fold", "none"]:
+                    tag = f"{arch}__dwi_axial__{clin}__cv5__s0"
+                    g = RES / "thesis" / f"gradcam_{tag}.csv"
+                    if g.exists() and "energy_in_mirror" in g.open().readline() and not a.force:
+                        print(f"  {tag}: Grad-CAM with mirror control exists, skipped")
+                        continue
+                    cmd = [py, SRC / "thesis_models.py", "--arch", arch, "--input", "dwi_axial", "--clin", clin,
+                           "--split", "cv5", "--gradcam"]
+                    run(cmd, log=L / f"train_{arch}_dwi_{clin}_cv5.txt", dry=a.dry_run)
+        elif st == "seeds":
+            for seed in SEEDS:
+                for arch in ["vgg16", "effb0", "basic"]:
+                    if a.arch and arch not in a.arch:
+                        continue
+                    for inp, clin, split, _ in CONFIGS:
+                        tag = f"{arch}__{inp}__{clin}__{split}__s{seed}"
+                        if (RES / "thesis" / "oof" / f"{tag}.csv").exists() and not a.force:
+                            print(f"  {tag}: predictions exist, skipped")
+                            continue
+                        cmd = [py, SRC / "thesis_models.py", "--arch", arch, "--input", inp, "--clin", clin,
+                               "--split", split, "--seed", str(seed)]
+                        run(cmd, log=L / "seeds" / f"train_{arch}_{SHORT.get(inp, inp)}_{clin}_{split}_s{seed}.txt",
+                            dry=a.dry_run)
         elif st == "evaluate":
             run([py, SRC / "thesis_eval.py"], log=L / "evaluate.txt", dry=a.dry_run)
     print("\nFinished. Manuscript outputs: results/thesis/paper")

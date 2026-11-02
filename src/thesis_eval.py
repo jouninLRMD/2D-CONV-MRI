@@ -58,11 +58,11 @@ rows = []
 res = {}
 groups = {}
 for f in sorted((T / "oof").glob("*.csv")):
-    groups.setdefault("__".join(f.stem.split("__")[:4]), []).append(f)
+    if f.stem.endswith("__s0"):          # seed 0 is the primary analysis; other seeds are summarized separately
+        groups.setdefault("__".join(f.stem.split("__")[:4]), []).append(f)
 unit_rows = []
 for cfg, fs in groups.items():
     arch, inp, clin, split = cfg.split("__")
-    # several seeds: average the slice probabilities (seed ensemble)
     d = pd.concat([pd.read_csv(f) for f in fs]).groupby(["participant_id", "unit", "src", "slice"], as_index=False).p.mean()
     for u, du in d.groupby("unit"):
         pu = du.groupby("participant_id").p.mean(); yu = L.loc[pu.index, "y_poor"].values.astype(int)
