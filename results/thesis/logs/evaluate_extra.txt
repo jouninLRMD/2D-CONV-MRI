@@ -1,0 +1,114 @@
+                           model   split    n    auc     lo     hi  d_clin   d_lo   d_hi      p  d_lesion  dl_lo  dl_hi  p_lesion
+0                       clinical  thesis  108  0.824  0.746  0.897     NaN    NaN    NaN    NaN       NaN    NaN    NaN       NaN
+1                clinical_lesion  thesis  108  0.834  0.758  0.906   0.010 -0.052  0.073  0.757       NaN    NaN    NaN       NaN
+2                       clinical     cv5  718  0.756  0.719  0.793     NaN    NaN    NaN    NaN       NaN    NaN    NaN       NaN
+3                clinical_lesion     cv5  718  0.795  0.764  0.827   0.040  0.013  0.065  0.001       NaN    NaN    NaN       NaN
+4   latefusion_basic_flair_axial     cv5  718  0.767  0.732  0.803   0.012 -0.004  0.027  0.135    -0.028 -0.053 -0.001     0.045
+5      latefusion_basic_t1_axial     cv5  718  0.764  0.728  0.802   0.008 -0.003  0.019  0.152    -0.031 -0.058 -0.005     0.020
+6     latefusion_basic_dwi_axial     cv5  718  0.798  0.766  0.831   0.042  0.019  0.066  0.000     0.003 -0.015  0.021     0.755
+7   latefusion_vgg16_flair_axial     cv5  718  0.771  0.736  0.805   0.015 -0.004  0.031  0.112    -0.025 -0.052  0.004     0.089
+8      latefusion_vgg16_t1_axial     cv5  718  0.773  0.738  0.807   0.018 -0.000  0.034  0.051    -0.022 -0.049  0.004     0.087
+9     latefusion_vgg16_dwi_axial     cv5  718  0.803  0.771  0.835   0.048  0.021  0.073  0.000     0.008 -0.008  0.025     0.355
+10  latefusion_effb0_flair_axial     cv5  718  0.769  0.734  0.803   0.013 -0.003  0.029  0.127    -0.027 -0.053  0.001     0.064
+11     latefusion_effb0_t1_axial     cv5  718  0.771  0.735  0.806   0.015 -0.003  0.031  0.095    -0.024 -0.052  0.002     0.070
+12    latefusion_effb0_dwi_axial     cv5  718  0.812  0.780  0.843   0.056  0.029  0.082  0.000     0.016 -0.001  0.033     0.076
+13   network_basic_dwi_vs_lesion     cv5  718  0.772    NaN    NaN     NaN    NaN    NaN    NaN    -0.024 -0.048 -0.000     0.050
+14   network_vgg16_dwi_vs_lesion     cv5  718  0.777    NaN    NaN     NaN    NaN    NaN    NaN    -0.018 -0.040  0.003     0.092
+15   network_effb0_dwi_vs_lesion     cv5  718  0.790    NaN    NaN     NaN    NaN    NaN    NaN    -0.005 -0.024  0.014     0.610
+                                  tag  cal_intercept  cal_slope  brier
+0         basic__dwi_axial__fold__cv5         -0.084      0.839  0.194
+1         basic__dwi_axial__none__cv5         -0.043      1.334  0.216
+2       basic__flair_axial__fold__cv5         -0.017      0.886  0.201
+3       basic__flair_axial__none__cv5         -0.055      1.856  0.239
+4        basic__mix_native__fold__cv5         -0.037      1.043  0.201
+5      basic__mix_native__thesis__cv5         -0.024      0.951  0.201
+6   basic__mix_native__thesis__thesis         -0.288      1.446  0.184
+7          basic__t1_axial__fold__cv5         -0.004      0.928  0.202
+8          basic__t1_axial__none__cv5         -0.026      1.314  0.240
+9         effb0__dwi_axial__fold__cv5         -0.012      1.026  0.187
+10        effb0__dwi_axial__none__cv5         -0.037      2.029  0.200
+11      effb0__flair_axial__fold__cv5         -0.065      0.944  0.196
+12      effb0__flair_axial__none__cv5         -0.020      1.383  0.231
+13       effb0__mix_native__fold__cv5         -0.006      1.011  0.197
+14     effb0__mix_native__thesis__cv5          0.070      1.130  0.196
+15  effb0__mix_native__thesis__thesis         -0.141      1.620  0.173
+16         effb0__t1_axial__fold__cv5         -0.014      1.064  0.197
+17         effb0__t1_axial__none__cv5         -0.067      1.227  0.230
+18        vgg16__dwi_axial__fold__cv5         -0.064      0.955  0.192
+19        vgg16__dwi_axial__none__cv5          0.005      2.252  0.206
+20      vgg16__flair_axial__fold__cv5         -0.066      0.905  0.199
+21      vgg16__flair_axial__none__cv5          0.010      1.535  0.229
+22       vgg16__mix_native__fold__cv5         -0.041      0.931  0.197
+23     vgg16__mix_native__thesis__cv5          0.089      0.979  0.202
+24  vgg16__mix_native__thesis__thesis         -0.214      1.663  0.191
+25         vgg16__t1_axial__fold__cv5         -0.082      0.920  0.198
+26         vgg16__t1_axial__none__cv5         -0.025      1.489  0.232
+27                   clinical__thesis         -0.106      1.743  0.175
+28                      clinical__cv5         -0.010      0.957  0.203
+                                  tag      d   lo95   hi95   lo90   hi90      p  equivalent  superior  inferior  p_holm  superior_holm
+0         basic__dwi_axial__fold__cv5  0.016 -0.003  0.036 -0.000  0.033  0.106       False     False     False   1.000          False
+1         basic__dwi_axial__none__cv5 -0.048 -0.096  0.003 -0.089 -0.006  0.059       False     False     False   1.000          False
+2       basic__flair_axial__fold__cv5 -0.003 -0.015  0.010 -0.014  0.008  0.653        True     False     False   1.000          False
+3       basic__flair_axial__none__cv5 -0.121 -0.175 -0.070 -0.166 -0.077  0.000       False     False      True   0.000          False
+4        basic__mix_native__fold__cv5 -0.004 -0.013  0.005 -0.011  0.004  0.442        True     False     False   1.000          False
+5      basic__mix_native__thesis__cv5 -0.002 -0.013  0.009 -0.012  0.007  0.691        True     False     False   1.000          False
+6   basic__mix_native__thesis__thesis -0.005 -0.022  0.012 -0.019  0.009  0.518        True     False     False   1.000          False
+7          basic__t1_axial__fold__cv5 -0.007 -0.018  0.005 -0.016  0.003  0.242        True     False     False   1.000          False
+8          basic__t1_axial__none__cv5 -0.147 -0.199 -0.097 -0.191 -0.107  0.000       False     False      True   0.000          False
+9         effb0__dwi_axial__fold__cv5  0.035  0.018  0.052  0.021  0.048  0.000       False      True     False   0.000           True
+10        effb0__dwi_axial__none__cv5  0.032 -0.008  0.072 -0.003  0.066  0.133       False     False     False   1.000          False
+11      effb0__flair_axial__fold__cv5  0.016 -0.001  0.032  0.001  0.030  0.072        True     False     False   1.000          False
+12      effb0__flair_axial__none__cv5 -0.081 -0.129 -0.035 -0.121 -0.041  0.000       False     False      True   0.000          False
+13       effb0__mix_native__fold__cv5  0.013  0.000  0.025  0.002  0.023  0.047        True      True     False   0.893          False
+14     effb0__mix_native__thesis__cv5  0.014 -0.002  0.030  0.001  0.027  0.080        True     False     False   1.000          False
+15  effb0__mix_native__thesis__thesis  0.011 -0.016  0.040 -0.012  0.035  0.445       False     False     False   1.000          False
+16         effb0__t1_axial__fold__cv5  0.014 -0.002  0.031  0.001  0.028  0.084        True     False     False   1.000          False
+17         effb0__t1_axial__none__cv5 -0.089 -0.137 -0.043 -0.128 -0.049  0.000       False     False      True   0.000          False
+18        vgg16__dwi_axial__fold__cv5  0.022  0.007  0.036  0.009  0.034  0.003       False      True     False   0.060          False
+19        vgg16__dwi_axial__none__cv5  0.018 -0.023  0.059 -0.016  0.053  0.401       False     False     False   1.000          False
+20      vgg16__flair_axial__fold__cv5  0.007 -0.008  0.021 -0.005  0.019  0.345        True     False     False   1.000          False
+21      vgg16__flair_axial__none__cv5 -0.084 -0.131 -0.037 -0.125 -0.045  0.000       False     False      True   0.000          False
+22       vgg16__mix_native__fold__cv5  0.010 -0.003  0.023 -0.001  0.021  0.140        True     False     False   1.000          False
+23     vgg16__mix_native__thesis__cv5  0.001 -0.017  0.020 -0.014  0.016  0.904        True     False     False   1.000          False
+24  vgg16__mix_native__thesis__thesis -0.023 -0.062  0.012 -0.055  0.007  0.203       False     False     False   1.000          False
+25         vgg16__t1_axial__fold__cv5  0.008 -0.006  0.021 -0.004  0.019  0.278        True     False     False   1.000          False
+26         vgg16__t1_axial__none__cv5 -0.089 -0.136 -0.042 -0.127 -0.049  0.000       False     False      True   0.000          False
+                                  tag    icc
+0         basic__dwi_axial__fold__cv5  0.957
+1         basic__dwi_axial__none__cv5  0.788
+2       basic__flair_axial__fold__cv5  0.991
+3       basic__flair_axial__none__cv5  0.616
+4        basic__mix_native__fold__cv5  1.000
+5      basic__mix_native__thesis__cv5  0.996
+6   basic__mix_native__thesis__thesis  0.996
+7          basic__t1_axial__fold__cv5  0.999
+8          basic__t1_axial__none__cv5  0.673
+9         effb0__dwi_axial__fold__cv5  0.868
+10        effb0__dwi_axial__none__cv5  0.505
+11      effb0__flair_axial__fold__cv5  0.892
+12      effb0__flair_axial__none__cv5  0.647
+13       effb0__mix_native__fold__cv5  0.910
+14     effb0__mix_native__thesis__cv5  0.909
+15  effb0__mix_native__thesis__thesis  0.942
+16         effb0__t1_axial__fold__cv5  0.913
+17         effb0__t1_axial__none__cv5  0.641
+18        vgg16__dwi_axial__fold__cv5  0.910
+19        vgg16__dwi_axial__none__cv5  0.447
+20      vgg16__flair_axial__fold__cv5  0.944
+21      vgg16__flair_axial__none__cv5  0.597
+22       vgg16__mix_native__fold__cv5  0.938
+23     vgg16__mix_native__thesis__cv5  0.941
+24  vgg16__mix_native__thesis__thesis  0.978
+25         vgg16__t1_axial__fold__cv5  0.949
+26         vgg16__t1_axial__none__cv5  0.611
+                               tag  slices  empty  patients  energy   area  ratio  ratio_lo  ratio_hi  excess  excess_lo  excess_hi  ratio_q1  ratio_q2  ratio_q3  ratio_q4
+0  basic__dwi_axial__fold__cv5__s0    4353      0       594   0.020  0.103  0.194     0.187     0.245  -0.059     -0.065     -0.054     0.394     0.245     0.182     0.167
+1  basic__dwi_axial__none__cv5__s0    4431      0       604   0.154  0.101  1.523     1.413     1.637   0.039      0.031      0.047     1.007     1.447     1.789     1.469
+2  effb0__dwi_axial__fold__cv5__s0    4415      0       604   0.149  0.101  1.472     1.375     1.520   0.033      0.028      0.038     0.985     1.362     1.651     1.463
+3  effb0__dwi_axial__none__cv5__s0    4421      0       604   0.153  0.101  1.507     1.404     1.556   0.035      0.030      0.041     1.026     1.352     1.639     1.529
+4  vgg16__dwi_axial__fold__cv5__s0    4427      0       604   0.130  0.101  1.286     1.265     1.379   0.024      0.020      0.027     1.060     1.290     1.420     1.246
+5  vgg16__dwi_axial__none__cv5__s0    4429      0       604   0.138  0.101  1.364     1.345     1.471   0.030      0.026      0.034     1.169     1.382     1.495     1.320
+Empty DataFrame
+Columns: []
+Index: []
+written /home/claude/2d-conv-mri/results/thesis/paper/numbers_t2.tex

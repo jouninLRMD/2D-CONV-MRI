@@ -51,18 +51,23 @@ R = [f"Patients, n & {len(Lc)} & {len(good)} & {len(poor)} & \\\\",
      f"\\quad Black & {npct(Lc.race == 'b', Lc)} & {npct(good.race == 'b', good)} & {npct(poor.race == 'b', poor)} & \\\\",
      f"\\quad White & {npct(Lc.race == 'w', Lc)} & {npct(good.race == 'w', good)} & {npct(poor.race == 'w', poor)} & \\\\",
      f"\\quad other or unknown & {npct(Lc.race.isna(), Lc)} & {npct(good.race.isna(), good)} & {npct(poor.race.isna(), poor)} & \\\\",
-     f"Admission NIHSS & {med('nihss', Lc)} & {med('nihss', good)} & {med('nihss', poor)} & {pf(pcont('nihss'))} \\\\",
+     f"NIHSS & {med('nihss', Lc)} & {med('nihss', good)} & {med('nihss', poor)} & {pf(pcont('nihss'))} \\\\",
      f"BMI, kg/m$^2$ & {med('bmi', Lc)} & {med('bmi', good)} & {med('bmi', poor)} & {pf(pcont('bmi'))} \\\\",
-     f"Prior stroke & {npct(Lc.priorstroke == 1, Lc)} & {npct(good.priorstroke == 1, good)} & {npct(poor.priorstroke == 1, poor)} & {pf(pcat('priorstroke'))} \\\\"]
+     f"BMI missing & {npct(Lc.bmi.isna(), Lc)} & {npct(good.bmi.isna(), good)} & {npct(poor.bmi.isna(), poor)} & {pf(chi2_contingency(pd.crosstab(Lc.bmi.isna(), Lc.y_poor))[1])} \\\\",
+     f"Prior stroke (imaging evidence)$^{{\\ddagger}}$ & {npct(Lc.priorstroke == 1, Lc)} & {npct(good.priorstroke == 1, good)} & {npct(poor.priorstroke == 1, poor)} & {pf(pcat('priorstroke'))} \\\\"]
 TO = {1: "large artery", 2: "cardioembolism", 3: "small-vessel disease", 4: "other cause", 5: "cryptogenic"}
 R.append("TOAST subtype & & & & " + pf(pcat("toast_c")) + " \\\\")
 for k, v in TO.items():
     R.append(f"\\quad {v} & {npct(Lc.toast == k, Lc)} & {npct(good.toast == k, good)} & {npct(poor.toast == k, poor)} & \\\\")
+R.append(f"\\quad not recorded & {npct(Lc.toast.isna(), Lc)} & {npct(good.toast.isna(), good)} & {npct(poor.toast.isna(), poor)} & \\\\")
+R.append("Discharge mRS & & & & \\\\")
+for k in range(7):
+    R.append(f"\\quad {k}{' (death)' if k == 6 else ''} & {npct(Lc.mrs == k, Lc)} & {npct(good.mrs == k, good) if k <= 2 else ''} & {npct(poor.mrs == k, poor) if k >= 3 else ''} & \\\\")
 R += [f"Scanned at 3 T & {npct(Lc.field >= 3, Lc)} & {npct(good.field >= 3, good)} & {npct(poor.field >= 3, poor)} & {pf(pcat('field_c'))} \\\\",
       f"Expert lesion mask & {npct(Lc.has_mask.astype(bool), Lc)} & {npct(good.has_mask.astype(bool), good)} & {npct(poor.has_mask.astype(bool), poor)} & {pf(pcat('mask_c'))} \\\\"]
 mk = Lc[Lc.has_mask.astype(bool)]; mg, mp = mk[mk.y_poor == 0], mk[mk.y_poor == 1]
 R += [f"Acute lesion, mL$^{{\\dagger}}$ & {medf('acute_ml', mk)} & {medf('acute_ml', mg)} & {medf('acute_ml', mp)} & {pf(mannwhitneyu(mg.acute_ml.dropna(), mp.acute_ml.dropna()).pvalue)} \\\\",
-      f"Chronic infarct$^{{\\dagger}}$ & {npct(mk.chronic_ml_filled.fillna(0) >= 1, mk)} & {npct(mg.chronic_ml_filled.fillna(0) >= 1, mg)} & {npct(mp.chronic_ml_filled.fillna(0) >= 1, mp)} & {pf(chi2_contingency(pd.crosstab(mk.chronic_c, mk.y_poor))[1])} \\\\",
+      f"Chronic infarct, 1 mL or more$^{{\\dagger}}$ & {npct(mk.chronic_ml_filled.fillna(0) >= 1, mk)} & {npct(mg.chronic_ml_filled.fillna(0) >= 1, mg)} & {npct(mp.chronic_ml_filled.fillna(0) >= 1, mp)} & {pf(chi2_contingency(pd.crosstab(mk.chronic_c, mk.y_poor))[1])} \\\\",
       f"Lesion mean rADC$^{{\\dagger}}$ & {mk.acute_radc_mean.median():.2f} ({mk.acute_radc_mean.quantile(.25):.2f}, {mk.acute_radc_mean.quantile(.75):.2f}) & "
       f"{mg.acute_radc_mean.median():.2f} ({mg.acute_radc_mean.quantile(.25):.2f}, {mg.acute_radc_mean.quantile(.75):.2f}) & "
       f"{mp.acute_radc_mean.median():.2f} ({mp.acute_radc_mean.quantile(.25):.2f}, {mp.acute_radc_mean.quantile(.75):.2f}) & {pf(mannwhitneyu(mg.acute_radc_mean.dropna(), mp.acute_radc_mean.dropna()).pvalue)} \\\\"]

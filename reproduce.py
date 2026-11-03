@@ -170,6 +170,7 @@ def main():
                         run(cmd, log=L / "seeds" / f"train_{arch}_{SHORT.get(inp, inp)}_{clin}_{split}_s{seed}.txt",
                             dry=a.dry_run)
         elif st == "evaluate":
+            run([py, SRC / "thesis_extra.py"], log=L / "evaluate_extra.txt", dry=a.dry_run)
             run([py, SRC / "thesis_eval.py"], log=L / "evaluate.txt", dry=a.dry_run)
     print("\nFinished. Manuscript outputs: results/thesis/paper")
 

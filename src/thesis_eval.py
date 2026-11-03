@@ -131,7 +131,7 @@ try:
     Tn = np.load(TH / "t1_native.npy", mmap_mode="r"); Dw = np.load(TH / "dwi_axial.npy", mmap_mode="r")
     cand = []
     if pl is not None:
-        for want in ["axial", "sagittal"]:
+        for want in ["axial", "coronal"]:      # FLAIR is stored axially or coronally in SOOP
             hit = np.where(pl.flair_plane.values == want)[0]
             if len(hit):
                 cand.append((hit[0], want))
@@ -168,7 +168,8 @@ ladder = [("Thesis setting,\nslice-level", "mix_native", "thesis", "thesis", "sl
           ("Same models,\npatient-level", "mix_native", "thesis", "thesis", "patient"),
           ("Five-fold CV,\npatient-level", "mix_native", "thesis", "cv5", "patient"),
           ("+ in-fold clinical\nhandling", "mix_native", "fold", "cv5", "patient"),
-          ("+ axial FLAIR\n(reoriented)", "flair_axial", "fold", "cv5", "patient"),
+          ("+ reoriented\n(FLAIR + T1w)", "mix_axial", "fold", "cv5", "patient"),
+          ("FLAIR only\n(reoriented)", "flair_axial", "fold", "cv5", "patient"),
           ("DWI instead of\nFLAIR", "dwi_axial", "fold", "cv5", "patient")]
 fig, ax = plt.subplots(figsize=(7.16, 2.4))
 for j, a in enumerate(["basic", "vgg16", "effb0"]):
@@ -200,6 +201,11 @@ for k, clin in enumerate(["fold", "none"]):
     rr = R[R.tag == "clinical__cv5"]
     if len(rr):
         ax[k].axhline(rr.auc_patient.iloc[0], color="#555555", lw=0.7, ls="--", label="clinical logistic")
+    if (OUT / "extra_reference.csv").exists():          # clinical variables + expert lesion volume (thesis_extra.py)
+        xr = pd.read_csv(OUT / "extra_reference.csv")
+        xr = xr[(xr.model == "clinical_lesion") & (xr.split == "cv5")]
+        if len(xr):
+            ax[k].axhline(xr.auc.iloc[0], color="#555555", lw=0.7, ls=":", label="clinical + lesion volume")
     ax[k].set_xticks(range(3)); ax[k].set_xticklabels(["FLAIR", "T1w", "DWI"]); ax[k].set_title("with clinical variables" if clin == "fold" else "image only", fontsize=7)
 ax[0].set_ylabel("Patient-level AUC (95% CI)"); ax[0].legend(fontsize=6); ax[0].set_ylim(0.45, 0.9)
 fig.savefig(OUT / "figT3_sequences.pdf", bbox_inches="tight", pad_inches=0.02); fig.savefig(OUT / "figT3_sequences.png", dpi=300, bbox_inches="tight", pad_inches=0.02); plt.close(fig)
@@ -243,7 +249,7 @@ if G:
                     c = z["cam"][i].astype(float); a_.imshow(np.ma.masked_where(c < 0.2 * c.max(), c), cmap="jet", alpha=0.45)
                 a_.contour(z["mask"][i], levels=[0.5], colors="#00e5ff" if show_cam else "#ff3b30", linewidths=0.5)
         fig.savefig(OUT / "figT4_gradcam.pdf", bbox_inches="tight", pad_inches=0.02); fig.savefig(OUT / "figT4_gradcam.png", dpi=300, bbox_inches="tight", pad_inches=0.02); plt.close(fig)
-key = lambda r: f"{r.arch}{r.input.replace('_', '')}{r.clin}{r.split}"
+key = lambda r: f"{r.arch}{r.input.replace('_', '').replace('-', '')}{r.clin}{r.split}"
 for _, r in R.iterrows():
     k = "clin" + r.split if r.arch == "logistic" else key(r)
     for c in ["auc_slice", "auc_patient", "lo", "hi", "d_clin", "d_lo", "d_hi", "acc_slice", "acc_patient"]:
