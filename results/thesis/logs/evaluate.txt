@@ -28,5 +28,4 @@
 26         vgg16__t1_axial__none__cv5      0.623        0.667  0.628  0.706  -0.089
 27                   clinical__thesis        NaN        0.824  0.746  0.897     NaN
 28                      clinical__cv5        NaN        0.756  0.719  0.793     NaN
-figT1 skipped: [Errno 2] No such file or directory: '/home/claude/2d-conv-mri/data/work/thesis/flair_native.npy'
-written /home/claude/2d-conv-mri/results/thesis/paper
+written E:\ONEDRIVE\Research\Carlos_Barrera_Thesis_Strokes_Project\Data\results\thesis\paper

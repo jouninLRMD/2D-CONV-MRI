@@ -1,0 +1,5 @@
+[vgg16__mix_native__fold__cv5__s1] fold0: 19480 train slices, stopped at epoch 9, 0.7 min
+[vgg16__mix_native__fold__cv5__s1] fold1: 19480 train slices, stopped at epoch 13, 1.0 min
+[vgg16__mix_native__fold__cv5__s1] fold2: 19480 train slices, stopped at epoch 11, 0.9 min
+[vgg16__mix_native__fold__cv5__s1] fold3: 19520 train slices, stopped at epoch 20, 1.6 min
+[vgg16__mix_native__fold__cv5__s1] fold4: 19520 train slices, stopped at epoch 9, 0.8 min

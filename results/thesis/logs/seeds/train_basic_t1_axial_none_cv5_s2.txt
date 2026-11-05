@@ -1,0 +1,5 @@
+[basic__t1_axial__none__cv5__s2] fold0: 9740 train slices, stopped at epoch 8, 1.0 min
+[basic__t1_axial__none__cv5__s2] fold1: 9740 train slices, stopped at epoch 35, 3.9 min
+[basic__t1_axial__none__cv5__s2] fold2: 9740 train slices, stopped at epoch 36, 4.0 min
+[basic__t1_axial__none__cv5__s2] fold3: 9760 train slices, stopped at epoch 42, 4.6 min
+[basic__t1_axial__none__cv5__s2] fold4: 9760 train slices, stopped at epoch 49, 5.3 min

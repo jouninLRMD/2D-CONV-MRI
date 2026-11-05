@@ -1,0 +1,5 @@
+[basic__flair_axial__none__cv5__s2] fold0: 9740 train slices, stopped at epoch 8, 1.0 min
+[basic__flair_axial__none__cv5__s2] fold1: 9740 train slices, stopped at epoch 9, 1.1 min
+[basic__flair_axial__none__cv5__s2] fold2: 9740 train slices, stopped at epoch 21, 2.4 min
+[basic__flair_axial__none__cv5__s2] fold3: 9760 train slices, stopped at epoch 43, 4.7 min
+[basic__flair_axial__none__cv5__s2] fold4: 9760 train slices, stopped at epoch 17, 1.9 min

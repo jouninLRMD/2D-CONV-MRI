@@ -50,16 +50,16 @@ R = [f"Patients, n & {len(Lc)} & {len(good)} & {len(poor)} & \\\\",
      f"Race & & & & {pf(pcat('race_c'))} \\\\",
      f"\\quad Black & {npct(Lc.race == 'b', Lc)} & {npct(good.race == 'b', good)} & {npct(poor.race == 'b', poor)} & \\\\",
      f"\\quad White & {npct(Lc.race == 'w', Lc)} & {npct(good.race == 'w', good)} & {npct(poor.race == 'w', poor)} & \\\\",
-     f"\\quad other or unknown & {npct(Lc.race.isna(), Lc)} & {npct(good.race.isna(), good)} & {npct(poor.race.isna(), poor)} & \\\\",
+     f"\\quad Other or unknown & {npct(Lc.race.isna(), Lc)} & {npct(good.race.isna(), good)} & {npct(poor.race.isna(), poor)} & \\\\",
      f"NIHSS & {med('nihss', Lc)} & {med('nihss', good)} & {med('nihss', poor)} & {pf(pcont('nihss'))} \\\\",
      f"BMI, kg/m$^2$ & {med('bmi', Lc)} & {med('bmi', good)} & {med('bmi', poor)} & {pf(pcont('bmi'))} \\\\",
      f"BMI missing & {npct(Lc.bmi.isna(), Lc)} & {npct(good.bmi.isna(), good)} & {npct(poor.bmi.isna(), poor)} & {pf(chi2_contingency(pd.crosstab(Lc.bmi.isna(), Lc.y_poor))[1])} \\\\",
      f"Prior stroke (imaging evidence)$^{{\\ddagger}}$ & {npct(Lc.priorstroke == 1, Lc)} & {npct(good.priorstroke == 1, good)} & {npct(poor.priorstroke == 1, poor)} & {pf(pcat('priorstroke'))} \\\\"]
-TO = {1: "large artery", 2: "cardioembolism", 3: "small-vessel disease", 4: "other cause", 5: "cryptogenic"}
+TO = {1: "Large artery", 2: "Cardioembolism", 3: "Small-vessel disease", 4: "Other cause", 5: "Cryptogenic"}
 R.append("TOAST subtype & & & & " + pf(pcat("toast_c")) + " \\\\")
 for k, v in TO.items():
     R.append(f"\\quad {v} & {npct(Lc.toast == k, Lc)} & {npct(good.toast == k, good)} & {npct(poor.toast == k, poor)} & \\\\")
-R.append(f"\\quad not recorded & {npct(Lc.toast.isna(), Lc)} & {npct(good.toast.isna(), good)} & {npct(poor.toast.isna(), poor)} & \\\\")
+R.append(f"\\quad Not recorded & {npct(Lc.toast.isna(), Lc)} & {npct(good.toast.isna(), good)} & {npct(poor.toast.isna(), poor)} & \\\\")
 R.append("Discharge mRS & & & & \\\\")
 for k in range(7):
     R.append(f"\\quad {k}{' (death)' if k == 6 else ''} & {npct(Lc.mrs == k, Lc)} & {npct(good.mrs == k, good) if k <= 2 else ''} & {npct(poor.mrs == k, poor) if k >= 3 else ''} & \\\\")

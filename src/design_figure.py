@@ -19,11 +19,11 @@ def arrow(x0, y0, x1, y1):
 col = ["#e8f1fa", "#eaf5ec", "#fdf1e3", "#f3ecf7", "#f6f6f6"]
 Y, H = 10.5, 26.5
 box(0.5, Y, 17.5, H, "a  Data", ["SOOP (ds004889)", "718 patients with", "discharge mRS, age, NIHSS", "poor: mRS 3 to 6", "", "thesis count of 1,436 =", "718 patients × 2 sequences", "", "FLAIR, T1w; DWI added;", "expert lesion masks"], col[0])
-box(20.2, Y, 18, H, "b  Slices (20/patient)", ["Thesis: third axis of the", "stored array, full range,", "often coronal (FLAIR)", "", "Corrected: reoriented,", "axial slices over the", "head extent", "", "DWI: axial, MNI space"], col[1])
+box(20.2, Y, 18, H, "b  Slices (20/patient)", ["Thesis: third axis of the", "stored array, full range,", "coronal in 23% of FLAIR,", "not axial in 6% of T1w", "Corrected: reoriented,", "axial slices over the", "head extent", "", "DWI: axial, MNI space"], col[1])
 box(40.4, Y, 18, H, "c  Networks", ["Basic CNN (3 blocks)", "VGG16, ImageNet, frozen", "EfficientNet-B0,", "ImageNet, frozen", "", "clinical branch: age,", "NIHSS, prior stroke, BMI", "(or image only)", "", "one prediction per slice"], col[2])
 box(60.6, Y, 18, H, "d  Evaluation ladder", ["1 thesis split, slice level", "2 same split, patient level", "3 five-fold CV, 718 patients", "4 in-fold clinical handling", "5 reoriented (FLAIR + T1w)", "6 FLAIR only", "7 DWI instead of FLAIR", "", "patient probability =", "mean over the slices"], col[3])
 box(80.8, Y, 18.7, H, "e  Added analyses", ["clinical model, and clinical", "model + lesion volume,", "on the same patients", "", "FLAIR, T1w and DWI,", "with and without", "clinical variables; 5 seeds", "", "200 random single splits", "", "Grad-CAM against the", "expert DWI lesion"], col[4])
 for x0, x1 in [(18.3, 19.9), (38.5, 40.1), (58.7, 60.3), (78.9, 80.5)]:
     arrow(x0, Y + H / 2, x1, Y + H / 2)
-ax.text(50, 7.2, "Models are fitted on training patients only; slice probabilities are averaged per patient, and AUCs carry patient-level bootstrap 95% CIs.", ha="center", fontsize=6.2, style="italic")
+ax.text(50, 7.2, "Models are fitted on training patients only; slice probabilities are averaged per patient, and all CIs come from bootstrap resampling of patients.", ha="center", fontsize=6.2, style="italic")
 fig.savefig(OUT / "figT0_design.pdf", bbox_inches="tight", pad_inches=0.02); fig.savefig(OUT / "figT0_design.png", dpi=200, bbox_inches="tight", pad_inches=0.02)

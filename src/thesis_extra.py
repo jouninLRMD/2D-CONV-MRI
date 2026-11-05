@@ -213,7 +213,7 @@ for _, r in GR.iterrows():
         if c in r and pd.notna(r[c]):
             put(k + c.replace("_", ""), float(r[c]), "{:.2f}" if c.startswith("ratio") else "{:.3f}")
     put(k + "energy", r.energy); put(k + "area", r.area)
-    put(k + "empty", r.empty, "{:.0f}"); put(k + "patients", r.patients, "{:.0f}")
+    put(k + "empty", r["empty"], "{:.0f}"); put(k + "patients", r.patients, "{:.0f}")
 
 # ------------------------------------------------------------------ training variability over seeds
 sd = []
