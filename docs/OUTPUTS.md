@@ -42,6 +42,8 @@ Written under the work folder (`CALM_WORK`, by default `data/work`):
 | `patient_predictions.csv` | Patient-level probability of every configuration and of the clinical model, with outcome, mRS, fold and the thesis partition of each patient. |
 | `split_variability.csv` | Test AUC of the clinical model on 200 random 85/15 splits. |
 | `gradcam_summary.csv` | Mean energy in the lesion, expected share by area and pointing hit rate per DWI network. |
+| `extra_bayes.csv` | For each of the 37 comparisons with the clinical model: Bayesian bootstrap posterior mean and 95% credible interval of the AUC difference, and the posterior probabilities of being worse, practically equivalent or better with margins of 0.02 and 0.03 (from `src/thesis_bayes.py`). |
+| `numbers_t3.tex` | Macros `\NTX{key}{field}` for these probabilities and for the share of favorable random splits with its exact 95% interval (`\NTX{sv}{k}`, `\NTX{sv}{cplo}`, `\NTX{sv}{cphi}`). |
 | `numbers_t.tex` | Every number quoted in the manuscript, as LaTeX macros. |
 | `figT0_design` to `figT5_splits` (`.pdf`, `.png`) | Figures 1 to 6 of the manuscript (T0 design, T1 inputs, T2 evaluation ladder, T3 sequences, T5 split variability, T4 Grad-CAM). |
 

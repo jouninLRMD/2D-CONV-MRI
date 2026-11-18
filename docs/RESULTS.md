@@ -79,6 +79,7 @@ Held-out slices whose expert acute lesion covers at least 20 pixels. "Energy in 
 
 * On the thesis split, the re-implementation behaves like the thesis (slice AUCs 0.02 to 0.04 higher), but the clinical model alone does as well on the same 108 test patients.
 * Moving from the single split to five-fold cross-validation lowers every network by 0.04 to 0.07. Scoring per patient, in-fold handling of missing values and reorientation each change the AUC by 0.01 or less.
-* In cross-validation, FLAIR and T1w networks with clinical variables stay within 0.02 of the clinical model; from the image alone they are well below it.
+* In cross-validation, FLAIR and T1w networks with clinical variables stay within 0.02 of the clinical model; from the image alone they are well below it. All 20 are equivalent to it within +/-0.03 (two one-sided tests), and the Bayesian posterior probability of practical equivalence is at least 0.95 (`extra_bayes.csv`). EfficientNet-B0 on FLAIR or T1w is probably slightly better (posterior probability of a positive difference 0.96), with the advantage most likely inside the margin.
+* The thesis split was favorable: 12 of 200 random splits (6%; exact 95% CI 3.1% to 10.2%) gave the clinical model an AUC at least as high.
 * DWI networks are above the clinical model (EfficientNet-B0: +0.035, 95% CI +0.018 to +0.052), and EfficientNet-B0 on DWI alone reaches 0.787.
 * The pretrained DWI networks put 1.3 to 1.5 times more Grad-CAM energy on the infarct than expected from its area; the basic network with clinical variables hardly looks at it.

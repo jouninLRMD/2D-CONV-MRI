@@ -28,6 +28,10 @@ src/thesis_slices.py         2D slices: FLAIR and T1w as in the thesis and reori
 src/thesis_models.py         the three networks of the thesis, trained under each combination of factors; Grad-CAM
 src/thesis_eval.py           AUCs, confidence intervals, clinical model, split variability, Grad-CAM summary,
                              figures and the number macros of the manuscript
+src/thesis_extra.py          reference models, late fusion, calibration, equivalence tests with Holm adjustment,
+                             slice agreement, Grad-CAM intervals and seed variability
+src/thesis_bayes.py          Bayesian probabilities of practical equivalence with the clinical model and the exact
+                             interval for the share of favorable random splits
 data/soop_manifest.csv       size and SHA-256 of every SOOP file
 data/labelled_participants.txt   the 718 patients of the study
 docs/METHODS.md              every step and setting in detail, and the differences from the thesis code

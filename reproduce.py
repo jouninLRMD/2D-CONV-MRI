@@ -172,6 +172,7 @@ def main():
         elif st == "evaluate":
             run([py, SRC / "thesis_extra.py"], log=L / "evaluate_extra.txt", dry=a.dry_run)
             run([py, SRC / "thesis_eval.py"], log=L / "evaluate.txt", dry=a.dry_run)
+            run([py, SRC / "thesis_bayes.py"], log=L / "evaluate_bayes.txt", dry=a.dry_run)
     print("\nFinished. Manuscript outputs: results/thesis/paper")
 
 
